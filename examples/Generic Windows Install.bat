@@ -12,6 +12,7 @@
 ::      - David Sikes (PockyBum522)
 ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
+setlocal EnableDelayedExpansion
 @echo off
 
 : For checking for internet
@@ -33,7 +34,7 @@ if "%1" neq "ELEV" (
 		call :warnUserIfRunningAsAdministrator
 		
 		call :warnUserIfRunningWithoutInternet
-
+		
 		call :createElevatedActionsMutexFile
 		
 		call :initElevatedActions
@@ -89,27 +90,8 @@ if "%1" neq "ELEV" (
     echo Running admin stuff!
     echo.
 
-    echo.
-    echo Installing Chocolatey
-    echo.
-
-    powershell -NoProfile -InputFormat None -ExecutionPolicy Bypass -Command "[System.Net.ServicePointManager]::SecurityProtocol = 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))" && SET "PATH=%PATH%;%ALLUSERSPROFILE%\chocolatey\bin"
-
-    echo.
-    echo Setting Chocolatey confirmation prompts to not show
-    echo.
-
-    choco feature enable -n=allowGlobalConfirmation
-
-    echo.
-    echo If Chocolatey was previously installed, checking for updates
-    echo.
-
-    choco upgrade chocolatey
-
-    choco config set --name cacheLocation --value "%~dp0WindowsCommandLineSettings\Resources\ChocolateyCache"
-	
-    choco upgrade autologon
+	:: Ensure that even if script terminates unexpectedly there's no hostname by default
+	call :saveHostnameBlank
 
 	echo.
 	echo.
@@ -141,12 +123,71 @@ if "%1" neq "ELEV" (
 	:: Pause without the prompt
 	pause>nul
 	
+	setlocal EnableDelayedExpansion
+	
+	echo ---------------------------------------------------
+	echo SCRIPT CONFIGURATION QUESTIONS
+	echo ---------------------------------------------------
+	echo.
+	echo In order to ensure that no user interaction is needed, we need to do a few things:
+	echo.
+	echo 1. UAC Needs to be set to "Never Notify"
+	echo 2. If your batch file needs to reboot, automatic logon to your user account needs to be set up so that reboots may take place with no interaction
+	echo.
+	
 	echo.
 	echo.
+	set /P userResponseUacAndAutologon=Do you want to change UAC prompt level and set up automatic logon so that script can run completely unattended even if reboots are necessary [Y]/N?
+	
 	echo.
-	set /P c=Do you want this script to help you change UAC prompt level and set up automatic logon so that you can run completely unattended [Y]/N?
-	if /I "%c%" EQU "N" goto :skipUacPromptsAndAutologon
-	if /I "%c%" EQU "n" goto :skipUacPromptsAndAutologon
+	echo.
+	set /P userResponseInstallDotnetSdk=Do you want to install the latest dotnet sdk [Y]/N?
+	
+	echo.
+	echo.
+	set /P userResponseInstallNotepadPlusPlus=Do you want this script to install Notepad++ and powershell core [Y]/N?
+	
+	echo.
+	echo.
+	set /P userResponseSetNewHostname=Do you want this script to set a new hostname? [Blank] for do not set new hostname, any other will be set as new hostname:
+	
+	call :saveHostnameAsRegistryEntry
+	
+    echo.
+    echo Installing Chocolatey
+    echo.
+
+    powershell -NoProfile -InputFormat None -ExecutionPolicy Bypass -Command "[System.Net.ServicePointManager]::SecurityProtocol = 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))" && SET "PATH=%PATH%;%ALLUSERSPROFILE%\chocolatey\bin"
+
+    echo.
+    echo Setting Chocolatey confirmation prompts to not show
+    echo.
+
+    choco feature enable -n=allowGlobalConfirmation
+
+    echo.
+    echo If Chocolatey was previously installed, checking for updates
+    echo.
+
+    choco upgrade chocolatey
+
+    choco config set --name cacheLocation --value "%~dp0WindowsCommandLineSettings\Resources\ChocolateyCache"
+	
+    choco upgrade autologon
+
+	if /I "%userResponseSetNewHostname%" EQU "" goto :skipSettingHostname
+	
+	WMIC computersystem where Name='%ComputerName%' Call rename "%userResponseSetNewHostname%"
+	
+	:skipSettingHostname
+	if /I "%userResponseSetNewHostname%" EQU "" goto :skipSettingHostname
+	
+	WMIC computersystem where Name='%ComputerName%' Call rename "%userResponseSetNewHostname%"
+	
+	:skipSettingHostname
+
+	if /I "%userResponseUacAndAutologon%" EQU "N" goto :skipUacPromptsAndAutologon
+	if /I "%userResponseUacAndAutologon%" EQU "n" goto :skipUacPromptsAndAutologon
 
     echo.
     echo -------------------------------------
@@ -169,22 +210,75 @@ if "%1" neq "ELEV" (
     echo In the window that pops up, please enter the password for this 
     echo user account and click "Enable" to save and activate automatic logon. 
     echo.
+    echo After this, script becomes unattended and you can walk away.
+    echo.
     echo Once finished, press any key to continue . . .
 
     pause>nul
+	
+	echo.
+	echo YOU CAN NOW WALK AWAY, REST OF SCRIPT WILL RUN UNATTENDED
+	echo YOU CAN NOW WALK AWAY, REST OF SCRIPT WILL RUN UNATTENDED
+	echo YOU CAN NOW WALK AWAY, REST OF SCRIPT WILL RUN UNATTENDED
+	echo YOU CAN NOW WALK AWAY, REST OF SCRIPT WILL RUN UNATTENDED
+	echo YOU CAN NOW WALK AWAY, REST OF SCRIPT WILL RUN UNATTENDED
+	echo YOU CAN NOW WALK AWAY, REST OF SCRIPT WILL RUN UNATTENDED
+	echo YOU CAN NOW WALK AWAY, REST OF SCRIPT WILL RUN UNATTENDED
+	echo YOU CAN NOW WALK AWAY, REST OF SCRIPT WILL RUN UNATTENDED
+	echo YOU CAN NOW WALK AWAY, REST OF SCRIPT WILL RUN UNATTENDED
+	echo YOU CAN NOW WALK AWAY, REST OF SCRIPT WILL RUN UNATTENDED
+	echo YOU CAN NOW WALK AWAY, REST OF SCRIPT WILL RUN UNATTENDED
+	echo YOU CAN NOW WALK AWAY, REST OF SCRIPT WILL RUN UNATTENDED
+	echo YOU CAN NOW WALK AWAY, REST OF SCRIPT WILL RUN UNATTENDED
+	echo YOU CAN NOW WALK AWAY, REST OF SCRIPT WILL RUN UNATTENDED
+	echo YOU CAN NOW WALK AWAY, REST OF SCRIPT WILL RUN UNATTENDED
+	echo YOU CAN NOW WALK AWAY, REST OF SCRIPT WILL RUN UNATTENDED
+	echo YOU CAN NOW WALK AWAY, REST OF SCRIPT WILL RUN UNATTENDED
+	echo YOU CAN NOW WALK AWAY, REST OF SCRIPT WILL RUN UNATTENDED
+	echo YOU CAN NOW WALK AWAY, REST OF SCRIPT WILL RUN UNATTENDED
+	echo YOU CAN NOW WALK AWAY, REST OF SCRIPT WILL RUN UNATTENDED
+	echo YOU CAN NOW WALK AWAY, REST OF SCRIPT WILL RUN UNATTENDED
+	echo YOU CAN NOW WALK AWAY, REST OF SCRIPT WILL RUN UNATTENDED
+	echo YOU CAN NOW WALK AWAY, REST OF SCRIPT WILL RUN UNATTENDED
+	echo YOU CAN NOW WALK AWAY, REST OF SCRIPT WILL RUN UNATTENDED
+	echo YOU CAN NOW WALK AWAY, REST OF SCRIPT WILL RUN UNATTENDED
+	echo YOU CAN NOW WALK AWAY, REST OF SCRIPT WILL RUN UNATTENDED
+	echo YOU CAN NOW WALK AWAY, REST OF SCRIPT WILL RUN UNATTENDED
+	echo YOU CAN NOW WALK AWAY, REST OF SCRIPT WILL RUN UNATTENDED
+	echo YOU CAN NOW WALK AWAY, REST OF SCRIPT WILL RUN UNATTENDED
+	echo YOU CAN NOW WALK AWAY, REST OF SCRIPT WILL RUN UNATTENDED
+	echo YOU CAN NOW WALK AWAY, REST OF SCRIPT WILL RUN UNATTENDED
+	echo YOU CAN NOW WALK AWAY, REST OF SCRIPT WILL RUN UNATTENDED
+	echo YOU CAN NOW WALK AWAY, REST OF SCRIPT WILL RUN UNATTENDED
+	echo YOU CAN NOW WALK AWAY, REST OF SCRIPT WILL RUN UNATTENDED
+	echo YOU CAN NOW WALK AWAY, REST OF SCRIPT WILL RUN UNATTENDED
+	echo YOU CAN NOW WALK AWAY, REST OF SCRIPT WILL RUN UNATTENDED
+	echo YOU CAN NOW WALK AWAY, REST OF SCRIPT WILL RUN UNATTENDED
+	echo YOU CAN NOW WALK AWAY, REST OF SCRIPT WILL RUN UNATTENDED
+	echo YOU CAN NOW WALK AWAY, REST OF SCRIPT WILL RUN UNATTENDED
+	echo YOU CAN NOW WALK AWAY, REST OF SCRIPT WILL RUN UNATTENDED
+		
 
 	:skipUacPromptsAndAutologon
 	
-    REM echo.
-    REM echo Installing latest Dot NET SDK
-    REM echo.
+	if /I "%userResponseInstallDotnetSdk%" EQU "N" goto :skipInstallDotNetSdk
+	if /I "%userResponseInstallDotnetSdk%" EQU "n" goto :skipInstallDotNetSdk
+	
+    echo.
+    echo Installing latest Dot NET SDK
+    echo.
 
-    REM choco upgrade dotnet-sdk
+    choco upgrade dotnet-sdk
 
     :: Bugfix that takes care of certain observed instances where 
     :: dot net dependencies were potentially not installed properly
-    :: choco install dotnet-sdk --force
+    choco install dotnet-sdk --force
 
+	:skipInstallDotNetSdk
+
+	if /I "%userResponseInstallNotepadPlusPlus%" EQU "N" goto :skipInstallNotepad
+	if /I "%userResponseInstallNotepadPlusPlus%" EQU "n" goto :skipInstallNotepad
+	
     echo.
     echo Installing powershell core
     echo.
@@ -197,6 +291,8 @@ if "%1" neq "ELEV" (
     echo.
 
     choco upgrade NotePadPlusPlus
+
+	:skipInstallNotepad
 
     echo.
     echo Refreshing environment variables for this shell instance
@@ -237,10 +333,29 @@ if "%1" neq "ELEV" (
 	echo.
     echo Finished configuring this computer.
 	echo.
+		
+	FOR /F "tokens=2* skip=2" %%a in ('reg query "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Environment" /v "SCRIPT_NEW_HOSTNAME"') do SET FETCHEDHOSTNAME=%%b
+		
+	echo Fetched hostname:
+	echo %FETCHEDHOSTNAME%
 	
-    pause
+	if /I "%FETCHEDHOSTNAME%" EQU "" (
+		
+		pause
+	
+	) else (
+	
+		echo. 
+		echo Computer needs to reboot to set new hostname.
+		echo.
+		echo Press any key to reboot...
+				
+		pause>nul
+		
+		shutdown -r -t 01 -f
+	)
     
-    exit /B
+    exit 0
 
 ::::::::::::::::::::::::::::::::::::::::::::::
 :: SCRIPT UTILITY LOGIC ONLY BELOW HERE
@@ -322,6 +437,38 @@ if "%1" neq "ELEV" (
     call :RefreshEnvironmentVariables
 
     exit /B
+
+
+:saveHostnameBlank
+
+	:: Set registry entry for hostname
+	del %TEMP%\newHostname.reg
+
+	echo Windows Registry Editor Version 5.00 >> %TEMP%\newHostname.reg
+	echo: >> %TEMP%\newHostname.reg
+	echo [HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Session Manager\Environment] >> %TEMP%\newHostname.reg
+	echo: "SCRIPT_NEW_HOSTNAME"="" >> %TEMP%\newHostname.reg
+	echo: >> %TEMP%\newHostname.reg
+
+	REG IMPORT %TEMP%\newHostname.reg
+
+	exit /B
+	
+
+:saveHostnameAsRegistryEntry
+	
+	:: Set registry entry for hostname
+	del %TEMP%\newHostname.reg
+
+	echo Windows Registry Editor Version 5.00 >> %TEMP%\newHostname.reg
+	echo: >> %TEMP%\newHostname.reg
+	echo [HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Session Manager\Environment] >> %TEMP%\newHostname.reg
+	echo: "SCRIPT_NEW_HOSTNAME"="%userResponseSetNewHostname%" >> %TEMP%\newHostname.reg
+	echo: >> %TEMP%\newHostname.reg
+
+	REG IMPORT %TEMP%\newHostname.reg
+
+	exit /B
 
 ::::::::::::::::::::::::::::::::::::::::::::
 :: Elevate.cmd - Version 4
