@@ -48,19 +48,38 @@ if "%1" neq "ELEV" (
     
 )
 
-:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
-:: ADD YOUR BATCH COMMANDS HERE, AFTER THIS BANNER
-:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
-:userRunAsAdminBatch
+
+:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+:: ADD YOUR BATCH COMMANDS HERE, AFTER THIS BANNER. ANYTHING IN THIS FUNCTION RUNS AS ADMIN, NOT AS THE USER
+:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+:userSuppliedBatchRunAsAdmin
 	
+	echo.
+    echo Running user supplied batch file stuff to be run as admin!
+    echo.
+	
+	set SETTINGSEXE="%~dp0WindowsCommandLineSettings.exe"
+	
+	:: Set the taskbar search bar to be completely hidden
+	%SETTINGSEXE% -Taskbar-Searchbar-SetHidden	
+	
+    exit /B
+	
+	
+:userSuppliedBatchRunAsUser
+
 	echo.
     echo Running user admin batch file stuff!
     echo.
 	
-	"%~dp0WindowsCommandLineSettings.exe" -Taskbar-Searchbar-SetHidden
-    
-    exit 0
-
+	set SETTINGSEXE="%~dp0WindowsCommandLineSettings.exe"
+	
+	:: Set the taskbar search bar to be completely hidden
+	%SETTINGSEXE% -Taskbar-Searchbar-SetHidden	
+	
+    exit /B
+	
+	
 :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 :: THIS SECTION RUNS FIRST. EVERYTHING IN HERE RUNS AS ADMINISTRATOR.
 :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
@@ -69,23 +88,6 @@ if "%1" neq "ELEV" (
     echo.
     echo Running admin stuff!
     echo.
-
-	echo ---------------------------------------------------
-	echo NOTICE: TEMPORARY MEASURES FOR RUNNING APPLICATION
-	echo ---------------------------------------------------
-	echo.
-	echo In order to ensure that no user interaction is needed, we need to do a few things:
-	echo.
-	echo 1. UAC Needs to be set to "Never Notify"
-	echo 2. If your batch file needs to reboot, automatic logon to your user account needs to be set up so that reboots may take place with no interaction
-	echo.
-	REM echo Once the application has finished, you will be prompted to ask if 
-	REM echo you want to set UAC and automatic logon back to their default settings
-	REM echo.
-	echo Once you have read this, this script will assist you with setting these settings
-	echo.
-
-	pause
 
     echo.
     echo Installing Chocolatey
@@ -108,6 +110,43 @@ if "%1" neq "ELEV" (
     choco config set --name cacheLocation --value "%~dp0WindowsCommandLineSettings\Resources\ChocolateyCache"
 	
     choco upgrade autologon
+
+	echo.
+	echo.
+	echo.
+	echo.
+	echo.
+	echo.
+	echo.
+	echo.
+	echo.
+	echo.
+	echo ---------------------------------------------------
+	echo NOTICE: TEMPORARY MEASURES FOR RUNNING APPLICATION
+	echo ---------------------------------------------------
+	echo.
+	echo In order to ensure that no user interaction is needed, we need to do a few things:
+	echo.
+	echo 1. UAC Needs to be set to "Never Notify"
+	echo 2. If your batch file needs to reboot, automatic logon to your user account needs to be set up so that reboots may take place with no interaction
+	echo.
+	REM echo Once the application has finished, you will be prompted to ask if 
+	REM echo you want to set UAC and automatic logon back to their default settings
+	REM echo.
+	echo Once you have read this, this script will assist you with setting these settings
+	echo.
+
+	echo ONLY AFTER READING THE ABOVE THOROUGHLY should you press any key to continue...
+	
+	:: Pause without the prompt
+	pause>nul
+	
+	echo.
+	echo.
+	echo.
+	set /P c=Do you want this script to help you change UAC prompt level and set up automatic logon so that you can run completely unattended [Y]/N?
+	if /I "%c%" EQU "N" goto :skipUacPromptsAndAutologon
+	if /I "%c%" EQU "n" goto :skipUacPromptsAndAutologon
 
     echo.
     echo -------------------------------------
@@ -132,8 +171,10 @@ if "%1" neq "ELEV" (
     echo.
     echo Once finished, press any key to continue . . .
 
-    pause> nul
+    pause>nul
 
+	:skipUacPromptsAndAutologon
+	
     REM echo.
     REM echo Installing latest Dot NET SDK
     REM echo.
@@ -163,15 +204,15 @@ if "%1" neq "ELEV" (
     ::echo "RefreshEnv.cmd only works from cmd.exe, please install the Chocolatey Profile to take advantage of refreshenv from PowerShell"
     call :RefreshEnvironmentVariables
 
-	call :userRunAsAdminBatch
-
+	:: Run user supplied commands in the function at the top of this script
+	call :userSuppliedBatchRunAsAdmin
 
     echo.
     echo Deleting lockfile that represents admin stuff is running
     echo.
 
-    del %PUBLIC%\Documents\elevatedActionsScriptV01.lockfile
-
+    del "%PUBLIC%\Documents\elevatedActionsScriptV01.lockfile"
+	
     exit 0
 
 ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
@@ -189,15 +230,9 @@ if "%1" neq "ELEV" (
 	
 	del "%AppData%\NuGet\NuGet.Config"
 	
-	REM "C:\Program Files\dotnet\dotnet.exe" restore "%~dp0WindowsCommandLineSetting\WindowsSetupAssistant.sln"
-	
-	REM "C:\Program Files\dotnet\dotnet.exe" build "%~dp0WindowsSetupAssistant\WindowsSetupAssistant.sln"
-
-	REM echo .
-	REM echo Running: "%~dp0WindowsSetupAssistant\WindowsSetupAssistant.Main\bin\x64\Debug\net7.0-windows\WindowsSetupAssistant.Main.exe"
-    REM echo .
-	
-	REM "%~dp0WindowsSetupAssistant\WindowsSetupAssistant.Main\bin\x64\Debug\net7.0-windows\WindowsSetupAssistant.Main.exe"
+	:: Run user supplied commands in the function at the top of this script
+	:: This particular setting works fine either run as admin, or run as the user. Not all of them are like that. Some require running as admin, some require running as user.	
+	call :userSuppliedBatchRunAsUser
 	
 	echo.
     echo Finished configuring this computer.
@@ -205,7 +240,7 @@ if "%1" neq "ELEV" (
 	
     pause
     
-    exit 0
+    exit /B
 
 ::::::::::::::::::::::::::::::::::::::::::::::
 :: SCRIPT UTILITY LOGIC ONLY BELOW HERE
