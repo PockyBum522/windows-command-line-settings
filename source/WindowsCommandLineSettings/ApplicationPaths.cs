@@ -8,7 +8,7 @@
         /// <summary>
         /// Per-user log folder path
         /// </summary>
-        private static string LogAppBasePath =>
+        internal static string LogAppBasePath =>
             Path.Combine(
                 "C:",
                 "Users",

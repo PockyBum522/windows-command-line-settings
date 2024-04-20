@@ -1,37 +1,77 @@
-﻿namespace WindowsCommandLineSettings;
+﻿using Serilog;
+using WindowsCommandLineSettings.WindowsChangers;
+using WindowsCommandLineSettings.WindowsChangers.Settings.Taskbar;
+
+namespace WindowsCommandLineSettings;
+
+// In the directory with the .csproj, run:
+// dotnet publish -r win-x64 -p:PublishSingleFile=true --self-contained true 
 
 internal static class Program
 {
+    // ReSharper disable InconsistentNaming
+    private static readonly ILogger _logger = DependencyBuilders.BuildLogger(ApplicationPaths.LogPath);
+    private static readonly HelpManager HelpManager = new(_logger);
+    // ReSharper restore InconsistentNaming
+    
     public static void Main(string[] args)
     {
-        if (args.Length < 2)
+        if (args.Length < 1)
         {
-            PrintHelpToConsole();
-            
+            HelpManager.PrintHelpToConsole();
             return;
         }
+
+        if (args.Contains("-help"))
+        {
+            HelpManager.FetchAppropriateHelpMessage(args);
+        }
+
+        var changers = new List<IWindowsChanger>
+        {
+            // ----------==================== Taskbar Changers ====================----------
+            
+            // Taskbar - Search icon changers:
+            new TaskbarSearchBarSetHidden(),
+            new TaskbarSearchBarCollapseToIcon()
+        };
+
+        InitializeAllChangers(changers);
         
-        Console.WriteLine("Hello, World!");
+        RunChangerOnMatchingCommand(args, changers);
     }
 
-    private static void PrintHelpToConsole()
+    private static void InitializeAllChangers(List<IWindowsChanger> changers)
     {
-        var message = @"
-This help is printed when windowsCommandLineSettings.exe is run with no arguments or with -help
+        foreach (var settingsChanger in changers)
+        {
+            settingsChanger.Initialize(_logger);
 
-To print this help:
--help
+            if (settingsChanger.Logger is null) throw new NullReferenceException();
+        }
+    }
 
-To see available settings that can be changed:
--commands
+    private static void RunChangerOnMatchingCommand(string[] args, List<IWindowsChanger> changers)
+    {
+        foreach (var settingsChanger in changers)
+        {
+            var trimmedCommand = settingsChanger.InvocationCommand.ToLower();
+            
+            foreach (var argument in args)
+            {
+                var trimmedArgument = argument.ToLower().Trim();
+                
+                // Allow for formatting chars in argument. We remove them so that things like TaskbarSearchBarSetHidden
+                // and Taskbar-Search-Bar-Set-Hidden all work
+                trimmedArgument = trimmedArgument.Replace("-", "");
+                trimmedArgument = trimmedArgument.Replace(".", "");
 
-To get extended help on a specific setting change:
--help setting-name
-
-To explicitly set log file location (Timestamp will be appended to log name automatically):
--logpath ""C:\Users\Public\Documents\Logs\WindowsCommandLineSettings\log_.log"" 
-Note: The default log path is the above path";
-
-        Console.WriteLine();
+                if (trimmedCommand == trimmedArgument)
+                {
+                    // Match!
+                    settingsChanger.RunAction();
+                }
+            }
+        }
     }
 }
