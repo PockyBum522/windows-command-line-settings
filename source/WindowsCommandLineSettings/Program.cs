@@ -11,29 +11,29 @@ internal static class Program
 {
     // ReSharper disable InconsistentNaming
     private static readonly ILogger _logger = DependencyBuilders.BuildLogger(ApplicationPaths.LogPath);
-    private static readonly HelpManager HelpManager = new(_logger);
+    private static readonly HelpManager _helpManager = new(_logger);
+    private static readonly ArgumentUtilities _argumentUtilities = new();
     // ReSharper restore InconsistentNaming
     
     public static void Main(string[] args)
     {
         if (args.Length < 1)
         {
-            HelpManager.PrintHelpToConsole();
+            _helpManager.PrintHelpToConsole();
             return;
         }
 
         if (args.Contains("-help"))
         {
-            HelpManager.FetchAppropriateHelpMessage(args);
+            _helpManager.FetchAppropriateHelpMessage(args);
         }
 
         var changers = new List<IWindowsChanger>
         {
             // ----------==================== Taskbar Changers ====================----------
             
-            // Taskbar - Search icon changers:
-            new TaskbarSearchBarSetHidden(),
-            new TaskbarSearchBarCollapseToIcon()
+            // Taskbar - Search bar changer
+            new TaskbarSearchBar(), // Options: SetHidden, SetIcon
         };
 
         InitializeAllChangers(changers);
@@ -45,31 +45,27 @@ internal static class Program
     {
         foreach (var settingsChanger in changers)
         {
-            settingsChanger.Initialize(_logger);
+            settingsChanger.Initialize(_logger, _argumentUtilities);
 
             if (settingsChanger.Logger is null) throw new NullReferenceException();
+            if (settingsChanger.ArgumentUtilities is null) throw new NullReferenceException();
         }
     }
 
-    private static void RunChangerOnMatchingCommand(string[] args, List<IWindowsChanger> changers)
+    private static void RunChangerOnMatchingCommand(string[] cliArguments, List<IWindowsChanger> changers)
     {
         foreach (var settingsChanger in changers)
         {
-            var trimmedCommand = settingsChanger.InvocationCommand.ToLower();
-            
-            foreach (var argument in args)
+            var trimmedCommandToMatch = _argumentUtilities.FormatArgumentForMatching(settingsChanger.InvocationCommand); 
+             
+            foreach (var cliArgument in cliArguments)
             {
-                var trimmedArgument = argument.ToLower().Trim();
+                var trimmedCliArgument = _argumentUtilities.FormatArgumentForMatching(cliArgument);
                 
-                // Allow for formatting chars in argument. We remove them so that things like TaskbarSearchBarSetHidden
-                // and Taskbar-Search-Bar-Set-Hidden all work
-                trimmedArgument = trimmedArgument.Replace("-", "");
-                trimmedArgument = trimmedArgument.Replace(".", "");
-
-                if (trimmedCommand == trimmedArgument)
+                if (trimmedCommandToMatch == trimmedCliArgument)
                 {
                     // Match!
-                    settingsChanger.RunAction();
+                    settingsChanger.RunAction(cliArguments);
                 }
             }
         }

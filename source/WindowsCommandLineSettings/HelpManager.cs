@@ -13,7 +13,7 @@ internal class HelpManager
 
     internal void FetchAppropriateHelpMessage(string[] args)
     {
-        throw new NotImplementedException();
+        PrintHelpToConsole();
     }
 
     internal void PrintHelpToConsole()
@@ -22,26 +22,23 @@ internal class HelpManager
             This help is printed when windowsCommandLineSettings.exe is run with no arguments or with -help
 
             To print this help:
-            -help
-
-            To see available settings that can be changed:
-            -commands
-
-            To get extended help on a specific setting change:
-            -help setting-name
-
-            To explicitly set log file location (Timestamp will be appended to log name automatically):
-            -logpath ""{ApplicationPaths.LogAppBasePath}"" 
-            Note: The default log path is the above path
-
-            To show and log extra debug messages:            
-            -debug debug-level
-            Available options for debug-level:
-                Warning
-                Information
-                Error
-                Fatal";
+            -help";
 
         Console.WriteLine(message);
     }
+    
+//     To get extended help on a specific setting change:
+//     -help setting-name
+//
+//         To explicitly set log file location (Timestamp will be appended to log name automatically):
+//         -logpath ""{ApplicationPaths.LogAppBasePath}"" 
+// Note: The default log path is the above path
+//
+//     To show and log extra debug messages:            
+// -debug debug-level
+// Available options for debug-level:
+// Warning
+//     Information
+// Error
+//     Fatal"
 }
