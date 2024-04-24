@@ -73,24 +73,26 @@ internal static class Program
             }
         }
     }
-    
-    /*
-     * Tested Examples:
-     *
-     * ----------==================== Taskbar ====================----------
-     *
-     * WindowsCommandLineSettings.exe -TaskbarSearchBar SetHidden
-     * WindowsCommandLineSettings.exe -TaskbarSearchBar SetIcon
-     * (Can be run as: ADMIN or USER)
-     *
-     * ----------==================== Desktop ====================----------
-     *
-     * WindowsCommandLineSettings.exe -DesktopWallpaper SetStretchedWallpaper C:\Windows\Web\Wallpaper\Theme1\img13.jpg
-     * (Can be run as: ADMIN or USER)
-     * 
-     * WindowsCommandLineSettings.exe -DesktopIcons DeleteAllFilesWithExtension *.txt
-     * WindowsCommandLineSettings.exe -DesktopIcons DeleteAllFilesWithExtension *.lnk
-     * (Can be run as: ADMIN or USER)
-     */
+
+    public static string TestedCommandsMessage => @"
+
+    Tested Examples:
+    (v0.0.01)
+
+    ----------==================== Taskbar ====================----------
+
+    WindowsCommandLineSettings.exe -TaskbarSearchBar SetHidden
+    WindowsCommandLineSettings.exe -TaskbarSearchBar SetIcon
+    (Can be run as: ADMIN or USER)
+
+    ----------==================== Desktop ====================----------
+
+    WindowsCommandLineSettings.exe -DesktopWallpaper SetStretchedWallpaper C:\Windows\Web\Wallpaper\Theme1\img13.jpg
+    (Can be run as: ADMIN or USER)
+     
+    WindowsCommandLineSettings.exe -DesktopIcons DeleteAllFilesWithExtension *.txt
+    WindowsCommandLineSettings.exe -DesktopIcons DeleteAllFilesWithExtension *.lnk
+    (Can be run as: ADMIN or USER)
+";
 }
 

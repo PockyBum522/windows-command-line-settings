@@ -19,10 +19,11 @@ internal class HelpManager
     internal void PrintHelpToConsole()
     {
         var message = @$"
-            This help is printed when windowsCommandLineSettings.exe is run with no arguments or with -help
+    This help is printed when windowsCommandLineSettings.exe is run with no arguments or with -help
 
-            To print this help:
-            -help";
+    To print this help:
+    -help
+" + Program.TestedCommandsMessage;
 
         Console.WriteLine(message);
     }

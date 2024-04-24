@@ -8,6 +8,7 @@
         <RuntimeIdentifier>win-x64</RuntimeIdentifier>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
+        <Version>0.0.01</Version>
 
         <DebugType>embedded</DebugType>
         <IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>
