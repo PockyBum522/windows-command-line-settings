@@ -25,7 +25,6 @@
     
     <ItemGroup>
       <Folder Include="WindowsChangers\ApplicationInstallers\" />
-      <Folder Include="WindowsChangers\Settings\" />
     </ItemGroup>
 
 </Project>

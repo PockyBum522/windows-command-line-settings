@@ -93,15 +93,19 @@ set settingsExe="%~dp0WindowsCommandLineSettings.exe"
 "%settingsExe%" -taskbarsearchbarsethidden
 
 
-# List of Arguments
+# Tested Examples of Arguments
 
-### Taskbar:
+----------==================== Taskbar ====================----------
 
-| Argument                         | Run as          | Functionality                                                     |
-| -------------------------------- | --------------- | ----------------------------------------------------------------- |
-| -TaskbarSearchBarCollapseToIcon  | ADMIN or USER   | Collapses the taskbar search bar so that it just shows an icon    |
-| -TaskbarSearchBarSetHidden       | ADMIN or USER   | Hide the taskbar search bar completely                            |
+WindowsCommandLineSettings.exe -TaskbarSearchBar SetHidden
+WindowsCommandLineSettings.exe -TaskbarSearchBar SetIcon
 
+----------==================== Desktop ====================----------
+
+WindowsCommandLineSettings.exe -DesktopWallpaper SetStretchedWallpaper C:\Windows\Web\Wallpaper\Theme1\img13.jpg
+ 
+WindowsCommandLineSettings.exe -DesktopIcons DeleteAllFilesWithExtension *.txt
+WindowsCommandLineSettings.exe -DesktopIcons DeleteAllFilesWithExtension *.lnk
 
 # Objectives 
 

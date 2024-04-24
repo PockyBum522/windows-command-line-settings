@@ -1,5 +1,6 @@
 ﻿using Serilog;
 using WindowsCommandLineSettings.WindowsChangers;
+using WindowsCommandLineSettings.WindowsChangers.Settings.Desktop;
 using WindowsCommandLineSettings.WindowsChangers.Settings.Taskbar;
 
 namespace WindowsCommandLineSettings;
@@ -30,10 +31,12 @@ internal static class Program
 
         var changers = new List<IWindowsChanger>
         {
-            // ----------==================== Taskbar Changers ====================----------
+            // Taskbar
+            new TaskbarSearchBar(),         
             
-            // Taskbar - Search bar changer
-            new TaskbarSearchBar(), // Options: SetHidden, SetIcon
+            // Desktop
+            new DesktopWallpaper(),         
+            new DesktopIcons()               
         };
 
         InitializeAllChangers(changers);
@@ -70,4 +73,22 @@ internal static class Program
             }
         }
     }
+    
+    /*
+     * Tested Examples:
+     *
+     * ----------==================== Taskbar ====================----------
+     *
+     * WindowsCommandLineSettings.exe -TaskbarSearchBar SetHidden
+     * WindowsCommandLineSettings.exe -TaskbarSearchBar SetIcon
+     *
+     * ----------==================== Desktop ====================----------
+     *
+     * WindowsCommandLineSettings.exe -DesktopWallpaper SetStretchedWallpaper C:\Windows\Web\Wallpaper\Theme1\img13.jpg
+     * 
+     * WindowsCommandLineSettings.exe -DesktopIcons DeleteAllFilesWithExtension *.txt
+     * WindowsCommandLineSettings.exe -DesktopIcons DeleteAllFilesWithExtension *.lnk
+     * 
+     */
 }
+

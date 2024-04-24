@@ -28,7 +28,6 @@ public class TaskbarSearchBar : IWindowsChanger
         if (Logger is null) throw new NullReferenceException();
         if (ArgumentUtilities is null) throw new NullReferenceException();
         
-        var trimmedArgumentToMatch = ArgumentUtilities.FormatArgumentForMatching(InvocationCommand);
         var suppliedParameters = ArgumentUtilities.GetArgumentParameters(InvocationCommand, originalArguments);
         
         Logger.Information("Running {ClassName} - {ThisMethod} (Parameters are: {Parameters})", InvocationCommand, System.Reflection.MethodBase.GetCurrentMethod()?.Name, @suppliedParameters);
