@@ -97,20 +97,20 @@ set settingsExe="%~dp0WindowsCommandLineSettings.exe"
 
 (Examples for v0.0.01)
 
-----------==================== Taskbar ====================----------
+----------==================== Taskbar ====================----------</br></br>
 
-WindowsCommandLineSettings.exe -TaskbarSearchBar SetHidden
-WindowsCommandLineSettings.exe -TaskbarSearchBar SetIcon
-(Can be run as: ADMIN or USER)
+WindowsCommandLineSettings.exe -TaskbarSearchBar SetHidden</br>
+WindowsCommandLineSettings.exe -TaskbarSearchBar SetIcon</br>
+(Can be run as: ADMIN or USER)</br></br>
 
-----------==================== Desktop ====================----------
+----------==================== Desktop ====================----------</br></br>
 
-WindowsCommandLineSettings.exe -DesktopWallpaper SetStretchedWallpaper C:\Windows\Web\Wallpaper\Theme1\img13.jpg
-(Can be run as: ADMIN or USER)
+WindowsCommandLineSettings.exe -DesktopWallpaper SetStretchedWallpaper C:\Windows\Web\Wallpaper\Theme1\img13.jpg</br>
+(Can be run as: ADMIN or USER)</br></br>
     
-WindowsCommandLineSettings.exe -DesktopIcons DeleteAllFilesWithExtension *.txt
-WindowsCommandLineSettings.exe -DesktopIcons DeleteAllFilesWithExtension *.lnk
-(Can be run as: ADMIN or USER)
+WindowsCommandLineSettings.exe -DesktopIcons DeleteAllFilesWithExtension *.txt</br>
+WindowsCommandLineSettings.exe -DesktopIcons DeleteAllFilesWithExtension *.lnk</br>
+(Can be run as: ADMIN or USER)</br></br>
 
 # Objectives 
 
