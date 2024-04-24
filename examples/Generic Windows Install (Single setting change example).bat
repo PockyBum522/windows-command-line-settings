@@ -59,98 +59,14 @@ if "%1" neq "ELEV" (
     echo Running user supplied batch file stuff to be run as admin!
     echo.
 	
+	:: Have chocolatey remember install parameters we use now when doing updates at a later date
+	choco feature enable -n=useRememberedArgumentsForUpgrades
+	
 	set SETTINGSEXE="%~dp0WindowsCommandLineSettings.exe"
 	
 	:: Set the taskbar search bar to be completely hidden
-	%SETTINGSEXE% -TaskbarSearchBar SetHidden
+	%SETTINGSEXE% -Taskbar-Searchbar-SetHidden	
 	
-    :: Set the wallpaper to be the dark camping one built into Windows 10, stretched
-    %SETTINGSEXE% -DesktopWallpaper SetStretchedWallpaper C:\Windows\Web\Wallpaper\Theme1\img13.jpg
-
-    :: Have chocolatey remember install parameters we use now when doing updates at a later date
-    choco feature enable -n=useRememberedArgumentsForUpgrades
-
-    choco upgrade 7Zip 
-    
-    choco upgrade adoptopenjdk8openj9
-    
-    choco upgrade dotnet3.5
-
-    choco upgrade netfx-4.8
-
-    choco upgrade dotnet-5.0-desktopruntime
-    choco upgrade dotnet-6.0-desktopruntime
-    choco upgrade dotnet-7.0-desktopruntime
-    choco upgrade dotnet-8.0-desktopruntime
-
-    choco upgrade everything --params "/client-service /efu-association /folder-context-menu /run-on-system-startup /start-menu-shortcuts"
-    
-    choco upgrade firefox --params "/NoTaskbarShortcut"
-
-    choco upgrade googlechrome
-
-    choco upgrade opera --params "/NoAutostart /NoTaskbarShortcut"
-
-    choco upgrade brave --params ""
-    
-    choco upgrade microsoft-edge
-    
-    choco upgrade vscode --params "/NoQuicklaunchIcon"
-
-    choco upgrade python --params ""
-
-    choco upgrade winmerge
-    
-    choco upgrade libreoffice-fresh
-    
-    choco upgrade foxitreader
-    
-    choco upgrade zoom
-    
-    choco upgrade greenshot
-    
-    choco upgrade cdburnerxp
-    
-    choco upgrade vlc
-    
-    choco upgrade krita
-    
-    choco upgrade paint.net
-    
-    choco upgrade irfanview --params "/group /assoc=1"
-    choco upgrade irfanviewplugins
-    choco upgrade irfanview-shellextension
-    
-    choco upgrade audacity
-    choco upgrade audacity-ffmpeg
-    choco upgrade audacity-lame
-    
-    choco upgrade handbrake
-    
-    choco upgrade gimp
-    
-    :: Inkscape package can't be updated so must attempt uninstall first
-    choco uninstall inkscape
-    choco upgrade inkscape
-    
-    choco upgrade blender
-
-    :: Make VNC setup config inf for installation we're about to perform
-    call :saveUltraVncInf
-    choco upgrade ultravnc --params "/LoadInf:%TEMP%\ultraVncSetupConfig.inf"
-    
-    choco upgrade filezilla
-    
-    choco upgrade putty
-    
-    choco upgrade winscp
-    
-    choco upgrade powertoys
-    
-    choco upgrade revo-uninstaller
-    
-    choco upgrade wiztree
-    
     exit /B
 	
 	
@@ -162,8 +78,8 @@ if "%1" neq "ELEV" (
 	
 	set SETTINGSEXE="%~dp0WindowsCommandLineSettings.exe"
 	
-	:: As one of the last steps, delete all shortcuts on the desktop that got made with the application installs
-    %SETTINGSEXE% -DesktopIcons DeleteAllFilesWithExtension *.lnk
+	:: Set the taskbar search bar to be completely hidden
+	%SETTINGSEXE% -Taskbar-Searchbar-SetHidden	
 	
     exit /B
 	
@@ -525,23 +441,7 @@ if "%1" neq "ELEV" (
 
     exit /B
 
-:saveUltraVncInf
 
-	:: Set registry entry for hostname
-	del %TEMP%\ultraVncSetupConfig.inf
-
-	echo [Setup] >> %TEMP%\ultraVncSetupConfig.inf
-	echo Lang=en >> %TEMP%\ultraVncSetupConfig.inf
-	echo Dir=C:\Program Files\uvnc bvba\UltraVNC >> %TEMP%\ultraVncSetupConfig.inf
-	echo Group=UltraVNC >> %TEMP%\ultraVncSetupConfig.inf
-	echo NoIcons=0 >> %TEMP%\ultraVncSetupConfig.inf
-	echo SetupType=custom >> %TEMP%\ultraVncSetupConfig.inf
-	echo Components=ultravnc_repeater,ultravnc_viewer >> %TEMP%\ultraVncSetupConfig.inf
-	echo Tasks=desktopicon,associate >> %TEMP%\ultraVncSetupConfig.inf
-	echo: >> %TEMP%\ultraVncSetupConfig.inf
-
-	exit /B
-	
 :saveHostnameBlank
 
 	:: Set registry entry for hostname

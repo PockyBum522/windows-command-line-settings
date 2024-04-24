@@ -61,15 +61,27 @@ We are aiming to add more settings as the project progresses. We are still in th
 * Internet on said machine
 
 
-# Usage
+# Quickstart
+
+NOTE: You probably want to look through the actions performed in the two functions at the top of "Generic Windows Install.bat" and edit them to match what you want to configure your computer before running "Generic Windows Install.bat"
+
+1. Grab the "Generic Windows Install.bat" file out of the repo, in the examples folder.
+
+2. Grab or build the latest release, and make sure it's named "WindowsCommandLineSettings.exe"
+
+3. Place both of those files in the same folder, anywhere with write access for the current user, on the computer you wish to configure. 
+
+4. Run the "Generic Windows Install.bat" file. </br>
+(You can just double-click it normally. Don't run as administrator, the batch file handles elevating priveleges for you. This is because it needs to first run as the user, to get the information about who is running it/Be able to run things as the user vs. as admin.)
+
+
+# Usage notes
 
 For the end user, there are a few things you should know:
 
-First off, if you just want to try it, download the latest release and then just double click "RUN ME FIRST (BOOTSTRAPPER).bat" BE AWARE THIS WILL INSTALL A FEW THINGS AND CHANGE ONE SETTING ON YOUR PC AS AN EXAMPLE
+The batch file examples will set up a few things necessary for unattended install, like prompting you to disable UAC prompts (You can re-enable them after the application is finished configuring your computer) and setting up Automatic Logon to your user with Microsoft's AutoLogon. (You can disable it after the install by running sysinternals autologon again. Both of these steps are optional, but required for a fully unattended process)
 
-This will set up a few things necessary for unattended install, like prompting you to disable UAC prompts (You can re-enable them after the application is finished configuring your computer) and setting up Automatic Logon to your user with Microsoft's AutoLogon. (You can disable it after the install by running sysinternals autologon again. Both of these steps are optional, but required for a fully unattended process)
-
-If you have chosen to install standard .exe or .msi installers, save them for the last part of your batch file, so that everything else can happen unattended.
+If you have chosen to install standard .exe or .msi installers, save them for the last part of your batch file, so that everything else can happen unattended first.
 
 
 # Argument Notes
