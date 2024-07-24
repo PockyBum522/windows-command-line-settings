@@ -121,7 +121,7 @@ WindowsCommandLineSettings.exe -TaskbarSearchBar SetIcon</br>
 (Can be run as: ADMIN or USER)</br>
 </br>
 WindowsCommandLineSettings.exe -DesktopWallpaper SetStretchedWallpaper C:\Windows\Web\Wallpaper\Theme1\img13.jpg</br>
-</br>    
+
 WindowsCommandLineSettings.exe -DesktopIcons DeleteAllFilesWithExtension *.txt</br>
 WindowsCommandLineSettings.exe -DesktopIcons DeleteAllFilesWithExtension *.lnk</br>
 </br>
