@@ -1,6 +1,7 @@
 ﻿using Serilog;
 using WindowsCommandLineSettings.WindowsChangers;
 using WindowsCommandLineSettings.WindowsChangers.Settings.Desktop;
+using WindowsCommandLineSettings.WindowsChangers.Settings.Power;
 using WindowsCommandLineSettings.WindowsChangers.Settings.Taskbar;
 
 namespace WindowsCommandLineSettings;
@@ -36,7 +37,17 @@ internal static class Program
             
             // Desktop
             new DesktopWallpaper(),         
-            new DesktopIcons()               
+            new DesktopIcons(),
+            
+            // Power
+            new DiskTimeoutOnAc(),
+            new DiskTimeoutOnDc(),
+            new HibernateTimeoutOnAc(),
+            new HibernateTimeoutOnDc(),
+            new MonitorTimeoutOnAc(),
+            new MonitorTimeoutOnDc(),
+            new StandbyTimeoutOnAc(),
+            new StandbyTimeoutOnDc()
         };
 
         InitializeAllChangers(changers);
@@ -64,35 +75,53 @@ internal static class Program
             foreach (var cliArgument in cliArguments)
             {
                 var trimmedCliArgument = _argumentUtilities.FormatArgumentForMatching(cliArgument);
+
+                if (trimmedCommandToMatch != trimmedCliArgument) continue;
                 
-                if (trimmedCommandToMatch == trimmedCliArgument)
-                {
-                    // Match!
-                    settingsChanger.RunAction(cliArguments);
-                }
+                // Match!
+                settingsChanger.RunAction(cliArguments);
+                return;
             }
         }
+
+        Console.WriteLine("Could not find specified argument. Check the help with /? and verify spelling");
     }
 
     public static string TestedCommandsMessage => @"
+Tested Examples:
+(v0.0.02)
 
-    Tested Examples:
-    (v0.0.01)
+----------==================== Taskbar ====================----------
 
-    ----------==================== Taskbar ====================----------
+WindowsCommandLineSettings.exe -TaskbarSearchBar SetHidden
+WindowsCommandLineSettings.exe -TaskbarSearchBar SetIcon
+(Can be run as: ADMIN or USER)
 
-    WindowsCommandLineSettings.exe -TaskbarSearchBar SetHidden
-    WindowsCommandLineSettings.exe -TaskbarSearchBar SetIcon
-    (Can be run as: ADMIN or USER)
+----------==================== Desktop ====================----------
 
-    ----------==================== Desktop ====================----------
+WindowsCommandLineSettings.exe -DesktopWallpaper SetStretchedWallpaper C:\Windows\Web\Wallpaper\Theme1\img13.jpg
+(Can be run as: ADMIN or USER)
+ 
+WindowsCommandLineSettings.exe -DesktopIcons DeleteAllFilesWithExtension *.txt
+WindowsCommandLineSettings.exe -DesktopIcons DeleteAllFilesWithExtension *.lnk
+(Can be run as: ADMIN or USER)
 
-    WindowsCommandLineSettings.exe -DesktopWallpaper SetStretchedWallpaper C:\Windows\Web\Wallpaper\Theme1\img13.jpg
-    (Can be run as: ADMIN or USER)
-     
-    WindowsCommandLineSettings.exe -DesktopIcons DeleteAllFilesWithExtension *.txt
-    WindowsCommandLineSettings.exe -DesktopIcons DeleteAllFilesWithExtension *.lnk
-    (Can be run as: ADMIN or USER)
+----------==================== Power Timeouts ====================----------
+
+Supplied parameter is the number of minutes to wait before activating the power saving measure, 0 to disable:
+
+WindowsCommandLineSettings.exe -DiskTimeoutOnAc 0
+WindowsCommandLineSettings.exe -DiskTimeoutOnDc 5
+
+WindowsCommandLineSettings.exe -HibernateTimeoutOnAc 0
+WindowsCommandLineSettings.exe -HibernateTimeoutOnDc 5
+
+WindowsCommandLineSettings.exe -MonitorTimeoutOnAc 0
+WindowsCommandLineSettings.exe -MonitorTimeoutOnDc 5
+
+WindowsCommandLineSettings.exe -StandbyTimeoutOnAc 0
+WindowsCommandLineSettings.exe -StandbyTimeoutOnDc 5
+(Can be run as: ADMIN or USER)
 ";
 }
 

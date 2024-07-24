@@ -35,11 +35,11 @@ public class DesktopIcons : IWindowsChanger
         
         Logger.Information("Running {ClassName} - {ThisMethod} (Parameters are: {Parameters})", InvocationCommand, System.Reflection.MethodBase.GetCurrentMethod()?.Name, @suppliedParameters);
 
-        if (suppliedParameters.First() == "DeleteAllFilesWithExtension")
-        {
-            var extensionToMatch = suppliedParameters[1];
-            DeleteDesktopFilesWithExtension(extensionToMatch);
-        }
+        if (suppliedParameters.First() != "DeleteAllFilesWithExtension") return;
+        
+        // Otherwise:
+        var extensionToMatch = suppliedParameters[1];
+        DeleteDesktopFilesWithExtension(extensionToMatch);
     }
 
     [SupportedOSPlatform("Windows7.0")]
