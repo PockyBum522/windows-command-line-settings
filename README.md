@@ -7,6 +7,7 @@ THIS MESSAGE WILL BE REMOVED ONCE I HAVE A SIGNIFICANT NUMBER OF SETTINGS AVAILA
 
 * [Why didn't you just...?](https://github.com/PockyBum522/windows-command-line-settings#why-didnt-you-just)
 
+* [Tested Settings and Examples of Arguments](https://github.com/PockyBum522/windows-command-line-settings#tested-settings-and-examples-of-arguments)
 * [What it does](https://github.com/PockyBum522/windows-command-line-settings#what-it-does)
 * [Features and Roadmap](https://github.com/PockyBum522/windows-command-line-settings#features-and-roadmap)
 * [Prerequisites](https://github.com/PockyBum522/windows-command-line-settings#prerequisites)
@@ -105,9 +106,9 @@ set settingsExe="%~dp0WindowsCommandLineSettings.exe"
 "%settingsExe%" -taskbarsearchbarsethidden
 
 
-# Tested Examples of Arguments
+# Tested Settings and Examples of Arguments
 
-(Examples for v0.0.01)
+(Examples for v0.0.02)
 
 ----------==================== Taskbar ====================----------</br></br>
 
