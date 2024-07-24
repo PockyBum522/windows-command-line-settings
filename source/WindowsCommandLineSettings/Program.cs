@@ -3,6 +3,7 @@ using WindowsCommandLineSettings.WindowsChangers;
 using WindowsCommandLineSettings.WindowsChangers.Settings.Desktop;
 using WindowsCommandLineSettings.WindowsChangers.Settings.Power;
 using WindowsCommandLineSettings.WindowsChangers.Settings.Taskbar;
+using WindowsCommandLineSettings.WindowsChangers.Settings.Themes;
 
 namespace WindowsCommandLineSettings;
 
@@ -47,7 +48,12 @@ internal static class Program
             new MonitorTimeoutOnAc(),
             new MonitorTimeoutOnDc(),
             new StandbyTimeoutOnAc(),
-            new StandbyTimeoutOnDc()
+            new StandbyTimeoutOnDc(),
+            
+            // Themes
+            new WindowTransparency(),
+            new DarkTheme(),
+            new DarkWindowTitlebars()
         };
 
         InitializeAllChangers(changers);
@@ -92,21 +98,23 @@ Tested Examples:
 (v0.0.02)
 
 ----------==================== Taskbar ====================----------
+(Can be run as: ADMIN or USER)
 
 WindowsCommandLineSettings.exe -TaskbarSearchBar SetHidden
 WindowsCommandLineSettings.exe -TaskbarSearchBar SetIcon
-(Can be run as: ADMIN or USER)
+
 
 ----------==================== Desktop ====================----------
+(Can be run as: ADMIN or USER)
 
 WindowsCommandLineSettings.exe -DesktopWallpaper SetStretchedWallpaper C:\Windows\Web\Wallpaper\Theme1\img13.jpg
-(Can be run as: ADMIN or USER)
  
 WindowsCommandLineSettings.exe -DesktopIcons DeleteAllFilesWithExtension *.txt
 WindowsCommandLineSettings.exe -DesktopIcons DeleteAllFilesWithExtension *.lnk
-(Can be run as: ADMIN or USER)
+
 
 ----------==================== Power Timeouts ====================----------
+(Can be run as: ADMIN or USER)
 
 Supplied parameter is the number of minutes to wait before activating the power saving measure, 0 to disable:
 
@@ -121,7 +129,19 @@ WindowsCommandLineSettings.exe -MonitorTimeoutOnDc 5
 
 WindowsCommandLineSettings.exe -StandbyTimeoutOnAc 0
 WindowsCommandLineSettings.exe -StandbyTimeoutOnDc 5
+
+
+----------==================== Themes ====================----------
 (Can be run as: ADMIN or USER)
+
+WindowsCommandLineSettings.exe -WindowTransparency 0
+WindowsCommandLineSettings.exe -WindowTransparency 1
+
+WindowsCommandLineSettings.exe -DarkTheme
+
+WindowsCommandLineSettings.exe -DarkWindowTitlebars
+
+
 ";
 }
 

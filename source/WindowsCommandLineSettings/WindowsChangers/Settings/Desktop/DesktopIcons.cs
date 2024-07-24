@@ -1,6 +1,4 @@
-﻿using System.Runtime.InteropServices;
-using System.Runtime.Versioning;
-using Microsoft.Win32;
+﻿using System.Runtime.Versioning;
 using Serilog;
 
 namespace WindowsCommandLineSettings.WindowsChangers.Settings.Desktop;
