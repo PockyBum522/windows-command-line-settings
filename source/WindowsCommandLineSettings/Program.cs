@@ -95,7 +95,7 @@ internal static class Program
 
     public static string TestedCommandsMessage => @"
 Tested Examples:
-(v0.0.02)
+(v0.0.03)
 
 ----------==================== Taskbar ====================----------
 (Can be run as: ADMIN or USER)
