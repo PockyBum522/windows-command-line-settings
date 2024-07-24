@@ -44,8 +44,6 @@ public class StandbyTimeoutOnAc : IWindowsChanger
             Arguments = $"-x -standby-timeout-ac {timeoutMinutes}",
             UseShellExecute = true
         };
-
-        Console.WriteLine($"Starting: {processStartInfo.FileName} {processStartInfo.Arguments}");
         
         Process.Start(processStartInfo)?.WaitForExit();
     }
